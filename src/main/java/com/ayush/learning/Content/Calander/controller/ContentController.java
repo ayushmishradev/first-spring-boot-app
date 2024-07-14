@@ -2,6 +2,7 @@ package com.ayush.learning.Content.Calander.controller;
 
 import com.ayush.learning.Content.Calander.model.Content;
 import com.ayush.learning.Content.Calander.repositry.ContentCreatorRepositry;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/content")
+@CrossOrigin
 public class ContentController {
 
     private final ContentCreatorRepositry repositry;
@@ -36,7 +38,7 @@ public class ContentController {
             return  repositry.findById(id);
     }
 
-    public void create(Content content) {
+    public void create( @Valid @RequestBody Content content) {
         repositry.saveContent(content);
     }
 
