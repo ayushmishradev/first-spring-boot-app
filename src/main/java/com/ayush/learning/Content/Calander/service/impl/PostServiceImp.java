@@ -1,5 +1,6 @@
 package com.ayush.learning.Content.Calander.service.impl;
 import com.ayush.learning.Content.Calander.entity.Post;
+import com.ayush.learning.Content.Calander.exception.ResourceNotFoundException;
 import com.ayush.learning.Content.Calander.payload.PostDto;
 import com.ayush.learning.Content.Calander.repository.PostRepository;
 import com.ayush.learning.Content.Calander.service.PostService;
@@ -37,6 +38,23 @@ public class PostServiceImp implements PostService {
 
         List<Post> posts = postRepository.findAll();
        return  posts.stream().map(post -> mapToDto(post)).collect(Collectors.toList());
+    }
+
+    @Override
+    public PostDto getPostById(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post","id", id));
+        return mapToDto(post);
+    }
+
+    @Override
+    public PostDto updatePost(PostDto postDto, Long id) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post","id", id));
+        post.setTitle((postDto.getTitle()));
+        post.setContent((postDto.getContent()));
+        post.setId((postDto.getId()));
+        post.setDescription((postDto.getDescription()));
+        Post updated = postRepository.save(post);
+        return mapToDto(updated);
     }
 
     private PostDto mapToDto(Post newPost) {
