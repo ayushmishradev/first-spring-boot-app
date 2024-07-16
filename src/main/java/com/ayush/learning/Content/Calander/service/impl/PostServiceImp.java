@@ -6,6 +6,7 @@ import com.ayush.learning.Content.Calander.service.PostService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImp implements PostService {
@@ -18,14 +19,27 @@ public class PostServiceImp implements PostService {
 
     @Override
     public PostDto createPost(PostDto postDto) {
-        Post post = new Post();
-        post.setTitle(postDto.getTitle());
-        post.setContent(postDto.getContent());
-        post.setDescription(postDto.getDescription());
+//        Post post = new Post();
+//        post.setTitle(postDto.getTitle());
+//        post.setContent(postDto.getContent());
+//        post.setDescription(postDto.getDescription());
+
+          Post post = mapToPost(postDto);
 
         // save to the database
         Post newPost = postRepository.save(post);
 
+        return mapToDto(newPost);
+    }
+
+    @Override
+    public List<PostDto> getAllPosts() {
+
+        List<Post> posts = postRepository.findAll();
+       return  posts.stream().map(post -> mapToDto(post)).collect(Collectors.toList());
+    }
+
+    private PostDto mapToDto(Post newPost) {
         PostDto postResponse = new PostDto();
         postResponse.setId((newPost.getId()));
         postResponse.setTitle(newPost.getTitle());
@@ -34,9 +48,11 @@ public class PostServiceImp implements PostService {
         return postResponse;
     }
 
-    @Override
-    public List<PostDto> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
-       // posts.stream().map()
+    private Post mapToPost(PostDto postDto) {
+        Post post = new Post();
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getContent());
+        post.setDescription(postDto.getDescription());
+        return post;
     }
 }

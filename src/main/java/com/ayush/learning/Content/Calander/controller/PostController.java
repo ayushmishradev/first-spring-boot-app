@@ -24,13 +24,12 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
-        System.out.println(postDto);
         return  new ResponseEntity<>(postService.createPost(postDto), HttpStatus.CREATED);
     }
 
     @GetMapping
     public List<PostDto> getAllPosts(@RequestBody PostDto postDto) {
         System.out.println(postDto);
-      //  return  new ResponseEntity<>(postService.createPost(postDto), HttpStatus.CREATED);
+        return  postService.getAllPosts();
     }
 }
