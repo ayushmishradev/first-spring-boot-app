@@ -6,6 +6,7 @@ import com.ayush.learning.Content.Calander.service.PostService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,15 +22,14 @@ public class PostController {
     }
 
     // create blog rest point
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
         return  new ResponseEntity<>(postService.createPost(postDto), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public List<PostDto> getAllPosts(@RequestBody PostDto postDto) {
-        System.out.println(postDto);
+    public List<PostDto> getAllPosts() {
         return  postService.getAllPosts();
     }
 
@@ -39,6 +39,7 @@ public class PostController {
     }
 
     // update post by id rest api
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public  ResponseEntity<PostDto> updatePost(@RequestBody PostDto postDto, @PathVariable(name ="id") Long id) {
         PostDto postResponse =  postService.updatePost(postDto, id);
@@ -46,6 +47,7 @@ public class PostController {
     }
 
     // update post by id rest api
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public  ResponseEntity<String> deletePost(@PathVariable(name ="id") Long id) {
          postService.deletePostById(id);
