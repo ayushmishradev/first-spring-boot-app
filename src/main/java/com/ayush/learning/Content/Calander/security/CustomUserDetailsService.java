@@ -1,7 +1,7 @@
 package com.ayush.learning.Content.Calander.security;
 
 import com.ayush.learning.Content.Calander.entity.User;
-import com.ayush.learning.Content.Calander.repository.UserRepository;
+import com.ayush.learning.Content.Calander.repository.UserRepositoryRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserRepositoryRepository userRepositoryRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(UserRepositoryRepository userRepositoryRepository) {
+        this.userRepositoryRepository = userRepositoryRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-       User user =  userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+       User user =  userRepositoryRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new UsernameNotFoundException(("user not found")));
 
         Set<GrantedAuthority> authorities = user.getRoles().stream().map((role) -> new SimpleGrantedAuthority(role.getName()))
